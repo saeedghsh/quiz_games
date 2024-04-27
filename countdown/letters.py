@@ -8,17 +8,16 @@ import random
 import string
 from typing import List, Dict
 
-import nltk
 
 from countdown.terminal_util import move_cursor_up, clear_line_content
+from scowl import scowl
 
 
 class WordCorpus:
-    # TODO: find a better dictionary
-    def __init__(self, word_source: str = "unix") -> None:
+    def __init__(self) -> None:
         self._vowels = ["a", "e", "i", "o", "u"]
         self._consonants = [l for l in string.ascii_lowercase if l not in self._vowels]
-        self._corpus = self.get_word_corpus(word_source)
+        self._corpus = self.get_word_corpus()
         self._letter_distribution = self._get_letter_distribution()
 
     @property
@@ -38,18 +37,8 @@ class WordCorpus:
         return self._vowels
 
     @staticmethod
-    def get_word_corpus(source: str = "unix") -> List[str]:
-        if source == "nltk":
-            nltk.download("words")
-            english_word_corpus = nltk.corpus.words.words()
-        elif source == "unix":
-            with open("/usr/share/dict/words", mode="r", encoding="utf-8") as word_file:
-                english_word_corpus = set(word_file.read().split())
-        else:
-            raise ValueError(
-                f"Acceptable word sources are 'unix' and 'nltk'! provided {source}"
-            )
-        return english_word_corpus
+    def get_word_corpus(dictionary_name: str = "en_US") -> List[str]:
+        return scowl.load_word_list(dictionary_name)
 
     def _get_letter_distribution(self) -> Dict[str, float]:
         if not self.corpus:
