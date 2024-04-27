@@ -1,9 +1,8 @@
 # Countdown Quiz in Terminal
 
-## Laundry list
-* [ ] countdown: words
-* [ ] countdown: numbers
-* [ ] 6 digit (number and signs)?
+* countdown: words
+* countdown: numbers
+* 6 digit (number and signs)?
 
 # License
 ```
