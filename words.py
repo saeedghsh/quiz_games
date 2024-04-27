@@ -18,7 +18,6 @@ class WordCorpus:
     def __init__(self, word_source: str = "unix") -> None:
         self._vowels = ["a", "e", "i", "o", "u"]
         self._consonants = [l for l in string.ascii_lowercase if l not in self._vowels]
-        self._letters = {"v": self._vowels, "c": self._consonants}
         self._corpus = self.get_word_corpus(word_source)
         self._letter_distribution = self._get_letter_distribution()
 
@@ -31,8 +30,12 @@ class WordCorpus:
         return self._letter_distribution
 
     @property
-    def letters(self) -> Dict[str, List[str]]:
-        return self._letters
+    def consonants(self) -> Dict[str, List[str]]:
+        return self._consonants
+
+    @property
+    def vowels(self) -> Dict[str, List[str]]:
+        return self._vowels
 
     @staticmethod
     def get_word_corpus(source: str = "unix") -> List[str]:
@@ -53,19 +56,6 @@ class WordCorpus:
             raise ValueError("Cannot compute letter distribution if corpus is empty")
         all_letters = [item for sublist in self.corpus for item in sublist]
         distribution = dict(Counter(all_letters))
-        # remove none standard letter
-        letters = list(distribution.keys())
-        for letter in letters:
-            if letter.lower() not in self._consonants + self._vowels:
-                del distribution[letter]
-        # normalize count separately
-        vowel_count = sum(v for k, v in distribution.items() if k in self._vowels)
-        consonant_count = sum(
-            v for k, v in distribution.items() if k in self._consonants
-        )
-        for k, v in distribution.items():
-            normalizer = consonant_count if k in self._consonants else vowel_count
-            distribution[k] = v / normalizer
         return distribution
 
     def is_valid_word(self, word: str) -> bool:
@@ -73,14 +63,15 @@ class WordCorpus:
 
 
 class WordCountdown:
-    def __init__(
-        self, number_of_letters: int = 9, timer: int = 30, allow_repeat: bool = True
-    ) -> None:
+    def __init__(self, number_of_letters: int = 9, timer: int = 30) -> None:
         self._word_corpus = WordCorpus()
         self._number_of_letters = number_of_letters
-        self._allow_repeat = allow_repeat
         self._timer = timer
         self._letters = []
+
+    @property
+    def word_corpus(self) -> WordCorpus:
+        return self._word_corpus
 
     @property
     def letters(self) -> List[str]:
@@ -100,13 +91,6 @@ class WordCountdown:
         return self._timer
 
     @staticmethod
-    def random_choice(items: List[str], exclude: List[str]) -> str:
-        include = [i for i in items if i not in exclude]
-        if len(include) == 0:
-            raise ValueError("The resulting set after exclusions must not be empty.")
-        return random.choice(include)
-
-    @staticmethod
     def vowel_or_consonant() -> str:
         """Method to ask user to input letter type, vowel or consonant"""
         while True:
@@ -116,18 +100,22 @@ class WordCountdown:
             move_cursor_up(1)
             clear_line_content()
 
-    def select_letter(self, letters: List[str], allow_repeat: bool) -> str:
+    def select_letter(self) -> str:
         letter_type = WordCountdown.vowel_or_consonant()
-        full_set = self._word_corpus.letters[letter_type]
-        exclude_set = [] if allow_repeat else letters
-        return WordCountdown.random_choice(full_set, exclude_set)
+        if letter_type == "v":
+            letters = self.word_corpus.vowels
+        elif letter_type == "c":
+            letters = self.word_corpus.consonants
+        else:
+            raise ValueError(f"Unrecognized letter type: {letter_type}.")
+        weights = [self.word_corpus.letter_distribution[letter] for letter in letters]
+        return random.choices(letters, weights, k=1)[0]  # 'k=1' means one item
 
     def select_letters(self):
-        # TODO: in randomly selecting letters, add weight based on distribution of letters
         letters = []
-        for _ in range(self._number_of_letters):
+        while len(letters) < self._number_of_letters:
             clear_line_content()
-            letter = self.select_letter(letters, self._allow_repeat)
+            letter = self.select_letter()
             letters.append(letter)
             clear_line_content()
             print(f"Selected letters: {' '.join(letter.upper() for letter in letters)}")
@@ -145,7 +133,7 @@ class WordCountdown:
 
     def is_response_valid(self, response: str) -> bool:
         is_allowed = self._is_allowed(list(response))
-        is_valid_word = self._word_corpus.is_valid_word(response)
+        is_valid_word = self.word_corpus.is_valid_word(response)
         return is_allowed and is_valid_word
 
     @staticmethod
@@ -164,7 +152,7 @@ class WordCountdown:
 
     def optimal_solution(self) -> List[str]:
         """Return all words that would get the highest score"""
-        sorted_words = sorted(self._word_corpus.corpus, key=len, reverse=True)
+        sorted_words = sorted(self.word_corpus.corpus, key=len, reverse=True)
         word_length = None
         result = []
         for word in sorted_words:
