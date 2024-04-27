@@ -4,8 +4,8 @@ import os
 import sys
 import argparse
 from typing import Sequence
-from words import WordCountdown, Printer
-from terminal_util import move_cursor_up, clear_line_content, timer
+from countdown.letters import LetterCountdown, Printer
+from countdown.terminal_util import move_cursor_up, clear_line_content, timer
 
 
 def _keep_playing() -> bool:
@@ -41,14 +41,14 @@ def _parse_arguments(argv: Sequence[str]) -> argparse.Namespace:  # pragma: no c
 def main(argv: Sequence[str]):
     # pylint: disable=missing-function-docstring
     args = _parse_arguments(argv)
-    word_countdown = WordCountdown(args.number_of_letters, args.timer)
+    letter_countdown = LetterCountdown(args.number_of_letters, args.timer)
 
     while True:
-        word_countdown.select_letters()
-        timer(seconds=word_countdown.timer)
-        responses = word_countdown.get_user_response()
-        Printer.print_results(responses, word_countdown)
-        Printer.print_optimal_solution(word_countdown)
+        letter_countdown.select_letters()
+        timer(seconds=letter_countdown.timer)
+        responses = letter_countdown.get_user_response()
+        Printer.print_results(responses, letter_countdown)
+        Printer.print_optimal_solution(letter_countdown)
         if not _keep_playing():
             break
 

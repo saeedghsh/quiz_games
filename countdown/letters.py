@@ -10,7 +10,7 @@ from typing import List, Dict
 
 import nltk
 
-from terminal_util import move_cursor_up, clear_line_content
+from countdown.terminal_util import move_cursor_up, clear_line_content
 
 
 class WordCorpus:
@@ -62,7 +62,7 @@ class WordCorpus:
         return word in self.corpus
 
 
-class WordCountdown:
+class LetterCountdown:
     def __init__(self, number_of_letters: int = 9, timer: int = 30) -> None:
         self._word_corpus = WordCorpus()
         self._number_of_letters = number_of_letters
@@ -101,7 +101,7 @@ class WordCountdown:
             clear_line_content()
 
     def select_letter(self) -> str:
-        letter_type = WordCountdown.vowel_or_consonant()
+        letter_type = LetterCountdown.vowel_or_consonant()
         if letter_type == "v":
             letters = self.word_corpus.vowels
         elif letter_type == "c":
@@ -166,17 +166,17 @@ class WordCountdown:
 
 class Printer:
     @staticmethod
-    def print_results(responses: List[str], word_countdown: WordCountdown):
+    def print_results(responses: List[str], letter_countdown: LetterCountdown):
         for response in responses:
-            is_valid = word_countdown.is_response_valid(response)
+            is_valid = letter_countdown.is_response_valid(response)
             score = len(response) if is_valid else 0
             correctness = "correct" if is_valid else "incorrect"
             print(f"Your answer '{response}' is {correctness}! {score} points!")
         print()
 
     @staticmethod
-    def print_optimal_solution(word_countdown: WordCountdown):
-        longest_possible_words = word_countdown.optimal_solution()
+    def print_optimal_solution(letter_countdown: LetterCountdown):
+        longest_possible_words = letter_countdown.optimal_solution()
         if longest_possible_words:
             print(
                 f"Longest possible word[s] have {len(longest_possible_words[0])} letters:"
