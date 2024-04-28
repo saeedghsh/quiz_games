@@ -55,7 +55,8 @@ def main(argv: Sequence[str]):
         timer(seconds=args.timer)
         responses = letter_countdown.get_user_response()
         print_results(responses, letter_countdown)
-        print_optimal_solution(letter_countdown)
+        optimal_solutions = letter_countdown.optimal_solutions()
+        print_optimal_solution(optimal_solutions)
         if not _keep_playing():
             break
 

@@ -93,7 +93,7 @@ class LetterCountdown:
         print()
         return responses
 
-    def optimal_solution(self) -> List[str]:
+    def optimal_solutions(self) -> List[str]:
         """Return all words that would get the highest score"""
         sorted_words = sorted(self.word_corpus.corpus, key=len, reverse=True)
         word_length = None
@@ -116,13 +116,10 @@ def print_results(responses: List[str], letter_countdown: LetterCountdown):
     print()
 
 
-def print_optimal_solution(letter_countdown: LetterCountdown):
-    longest_possible_words = letter_countdown.optimal_solution()
-    if longest_possible_words:
-        print(
-            f"Longest possible word[s] have {len(longest_possible_words[0])} letters:"
-        )
-        for w in longest_possible_words:
+def print_optimal_solution(solutions: List[str]):
+    if solutions:
+        print(f"Longest possible word[s] have {len(solutions[0])} letters:")
+        for w in solutions:
             print(f"\t{w}")
     else:
         print("No word is possible with this combination!")
