@@ -17,11 +17,17 @@ class WordCorpus:
         self._vowels = ["a", "e", "i", "o", "u"]
         self._consonants = [l for l in string.ascii_lowercase if l not in self._vowels]
         self._corpus = word_corpus_loader()
+        self._assert_non_empty_corpus()
         self._letter_distribution = self._get_letter_distribution()
 
     @property
     def corpus(self) -> List[str]:
+        self._assert_non_empty_corpus()
         return self._corpus
+
+    def _assert_non_empty_corpus(self):
+        if not self._corpus:
+            raise ValueError("Cannot operate with an empty corpus.")
 
     @property
     def letter_distribution(self) -> Dict[str, float]:
@@ -36,8 +42,6 @@ class WordCorpus:
         return self._vowels
 
     def _get_letter_distribution(self) -> Dict[str, float]:
-        if not self.corpus:
-            raise ValueError("Cannot compute letter distribution if corpus is empty")
         all_letters = [item for sublist in self.corpus for item in sublist]
         distribution = dict(Counter(all_letters))
         return distribution
