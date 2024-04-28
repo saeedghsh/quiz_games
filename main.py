@@ -4,9 +4,10 @@ import os
 import sys
 import argparse
 from typing import Sequence
-from countdown.letters import LetterCountdown, Printer, WordCorpus
 from scowl import scowl
 from countdown.terminal_util import move_cursor_up, clear_line_content, timer
+from countdown.letter_countdown import LetterCountdown, Printer
+from countdown.word_corpus import WordCorpus
 
 
 def _keep_playing() -> bool:
