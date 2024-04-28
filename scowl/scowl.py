@@ -3,7 +3,7 @@
 from typing import List
 
 
-def load_word_list(dict_name: str) -> List[str]:
+def load_word_list(dict_name: str = "en_US") -> List[str]:
     # pylint: disable=C0116 missing-function-docstring
 
     file_name = {

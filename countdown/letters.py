@@ -6,18 +6,17 @@
 from collections import Counter
 import random
 import string
-from typing import List, Dict
+from typing import Callable, List, Dict
 
 
 from countdown.terminal_util import move_cursor_up, clear_line_content
-from scowl import scowl
 
 
 class WordCorpus:
-    def __init__(self) -> None:
+    def __init__(self, word_corpus_loader: Callable) -> None:
         self._vowels = ["a", "e", "i", "o", "u"]
         self._consonants = [l for l in string.ascii_lowercase if l not in self._vowels]
-        self._corpus = self.get_word_corpus()
+        self._corpus = word_corpus_loader()
         self._letter_distribution = self._get_letter_distribution()
 
     @property
@@ -36,10 +35,6 @@ class WordCorpus:
     def vowels(self) -> Dict[str, List[str]]:
         return self._vowels
 
-    @staticmethod
-    def get_word_corpus(dictionary_name: str = "en_US") -> List[str]:
-        return scowl.load_word_list(dictionary_name)
-
     def _get_letter_distribution(self) -> Dict[str, float]:
         if not self.corpus:
             raise ValueError("Cannot compute letter distribution if corpus is empty")
@@ -52,8 +47,13 @@ class WordCorpus:
 
 
 class LetterCountdown:
-    def __init__(self, number_of_letters: int = 9, timer: int = 30) -> None:
-        self._word_corpus = WordCorpus()
+    def __init__(
+        self,
+        word_corpus: WordCorpus,
+        number_of_letters: int = 9,
+        timer: int = 30,
+    ) -> None:
+        self._word_corpus = word_corpus
         self._number_of_letters = number_of_letters
         self._timer = timer
         self._letters = []

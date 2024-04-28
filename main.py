@@ -4,7 +4,8 @@ import os
 import sys
 import argparse
 from typing import Sequence
-from countdown.letters import LetterCountdown, Printer
+from countdown.letters import LetterCountdown, Printer, WordCorpus
+from scowl import scowl
 from countdown.terminal_util import move_cursor_up, clear_line_content, timer
 
 
@@ -13,7 +14,7 @@ def _keep_playing() -> bool:
         response = input("Do you want to play more [y/n]? ").lower()
         if response == "y":
             return True
-        elif response == "n":
+        if response == "n":
             return False
         move_cursor_up(1)
         clear_line_content()
@@ -41,7 +42,8 @@ def _parse_arguments(argv: Sequence[str]) -> argparse.Namespace:  # pragma: no c
 def main(argv: Sequence[str]):
     # pylint: disable=missing-function-docstring
     args = _parse_arguments(argv)
-    letter_countdown = LetterCountdown(args.number_of_letters, args.timer)
+    word_corpus = WordCorpus(word_corpus_loader=scowl.load_word_list)
+    letter_countdown = LetterCountdown(word_corpus, args.number_of_letters, args.timer)
 
     while True:
         letter_countdown.select_letters()
