@@ -11,15 +11,9 @@ from utilities.terminal import move_cursor_up, clear_line_content
 
 
 class LetterCountdown:
-    def __init__(
-        self,
-        word_corpus: WordCorpus,
-        number_of_letters: int = 9,
-        timer: int = 30,
-    ) -> None:
+    def __init__(self, word_corpus: WordCorpus, number_of_letters: int = 9) -> None:
         self._word_corpus = word_corpus
         self._number_of_letters = number_of_letters
-        self._timer = timer
         self._letters = []
 
     @property
@@ -38,10 +32,6 @@ class LetterCountdown:
 
     def reset_letters(self):
         self.letters = []
-
-    @property
-    def timer(self) -> int:
-        return self._timer
 
     @staticmethod
     def vowel_or_consonant() -> str:

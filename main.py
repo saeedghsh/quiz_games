@@ -48,11 +48,11 @@ def main(argv: Sequence[str]):
     # pylint: disable=missing-function-docstring
     args = _parse_arguments(argv)
     word_corpus = WordCorpus(word_corpus_loader=scowl.load_word_list)
-    letter_countdown = LetterCountdown(word_corpus, args.number_of_letters, args.timer)
+    letter_countdown = LetterCountdown(word_corpus, args.number_of_letters)
 
     while True:
         letter_countdown.select_letters()
-        timer(seconds=letter_countdown.timer)
+        timer(seconds=args.timer)
         responses = letter_countdown.get_user_response()
         print_results(responses, letter_countdown)
         print_optimal_solution(letter_countdown)
