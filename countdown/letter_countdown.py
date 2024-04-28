@@ -7,8 +7,6 @@ from collections import Counter
 import random
 from typing import List
 from countdown.word_corpus import WordCorpus
-
-
 from countdown.terminal_util import move_cursor_up, clear_line_content
 
 
@@ -119,25 +117,23 @@ class LetterCountdown:
         return result
 
 
-class Printer:
-    @staticmethod
-    def print_results(responses: List[str], letter_countdown: LetterCountdown):
-        for response in responses:
-            is_valid = letter_countdown.is_response_valid(response)
-            score = len(response) if is_valid else 0
-            correctness = "correct" if is_valid else "incorrect"
-            print(f"Your answer '{response}' is {correctness}! {score} points!")
-        print()
+def print_results(responses: List[str], letter_countdown: LetterCountdown):
+    for response in responses:
+        is_valid = letter_countdown.is_response_valid(response)
+        score = len(response) if is_valid else 0
+        correctness = "correct" if is_valid else "incorrect"
+        print(f"Your answer '{response}' is {correctness}! {score} points!")
+    print()
 
-    @staticmethod
-    def print_optimal_solution(letter_countdown: LetterCountdown):
-        longest_possible_words = letter_countdown.optimal_solution()
-        if longest_possible_words:
-            print(
-                f"Longest possible word[s] have {len(longest_possible_words[0])} letters:"
-            )
-            for w in longest_possible_words:
-                print(f"\t{w}")
-        else:
-            print("No word is possible with this combination!")
-        print()
+
+def print_optimal_solution(letter_countdown: LetterCountdown):
+    longest_possible_words = letter_countdown.optimal_solution()
+    if longest_possible_words:
+        print(
+            f"Longest possible word[s] have {len(longest_possible_words[0])} letters:"
+        )
+        for w in longest_possible_words:
+            print(f"\t{w}")
+    else:
+        print("No word is possible with this combination!")
+    print()

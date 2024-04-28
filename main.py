@@ -6,7 +6,11 @@ import argparse
 from typing import Sequence
 from scowl import scowl
 from countdown.terminal_util import move_cursor_up, clear_line_content, timer
-from countdown.letter_countdown import LetterCountdown, Printer
+from countdown.letter_countdown import (
+    LetterCountdown,
+    print_optimal_solution,
+    print_results,
+)
 from countdown.word_corpus import WordCorpus
 
 
@@ -50,8 +54,8 @@ def main(argv: Sequence[str]):
         letter_countdown.select_letters()
         timer(seconds=letter_countdown.timer)
         responses = letter_countdown.get_user_response()
-        Printer.print_results(responses, letter_countdown)
-        Printer.print_optimal_solution(letter_countdown)
+        print_results(responses, letter_countdown)
+        print_optimal_solution(letter_countdown)
         if not _keep_playing():
             break
 
