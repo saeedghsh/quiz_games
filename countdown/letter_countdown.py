@@ -7,7 +7,7 @@ from collections import Counter
 import random
 from typing import List
 from countdown.word_corpus import WordCorpus
-from countdown.terminal_util import move_cursor_up, clear_line_content
+from utilities.terminal import move_cursor_up, clear_line_content
 
 
 class LetterCountdown:
