@@ -8,10 +8,16 @@
   <img src="https://github.com/saeedghsh/quiz_games/blob/master/images/letter_countdown_03.png" alt="Image 3" width="30%">
 </p>
 
+## Usage
+
+```bash
+python main.py countdown-words
+python main.py countdown-words --number-of-letters 9 --timer 30
+```
 
 ## Laundry List
 
-* [ ] turn the current version to a sub-parser `python main.py countdown-words`
+* [x] turn the current version to a sub-parser `python main.py countdown-words`
 * [ ] `python main.py countdown-numbers --digits=6 --no-repeat`
 * [ ] `python main.py wordle --letter-count=5 --tries=6`
 * [ ] jotto
