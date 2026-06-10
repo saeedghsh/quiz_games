@@ -13,12 +13,13 @@
 ```bash
 python main.py countdown-words
 python main.py countdown-words --number-of-letters 9 --timer 30
+python main.py countdown-numbers
 ```
 
 ## Laundry List
 
 * [x] turn the current version to a sub-parser `python main.py countdown-words`
-* [ ] `python main.py countdown-numbers --digits=6 --no-repeat`
+* [x] `python main.py countdown-numbers`
 * [ ] `python main.py wordle --letter-count=5 --tries=6`
 * [ ] jotto
 
