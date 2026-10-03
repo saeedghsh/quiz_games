@@ -58,7 +58,9 @@ RUN_BROWSER_TESTS=1 BROWSER_EXECUTABLE=/usr/bin/google-chrome \
   uv run --locked --group browser pytest -m browser
 ```
 
-The GitHub Actions workflow tests and builds on pushes and pull requests. To
-publish, set the repository's Pages source to **GitHub Actions**, then run
-**Test and build Pages** manually with **Deploy the built site** checked.
-Any static host can serve the contents of `_site/`.
+The GitHub Actions workflow tests and builds on pushes and pull requests. Set
+the repository's **Settings → Pages → Build and deployment → Source** to
+**GitHub Actions**. Successful pushes to `master` or `main` then automatically
+deploy the site; pull requests only run validation and build the artifact.
+You can also run **Test and build Pages** manually with **Deploy the built site**
+checked. Any static host can serve the contents of `_site/`.
