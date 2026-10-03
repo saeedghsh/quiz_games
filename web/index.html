@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#164c3f">
+  <meta name="description" content="A little time. A good challenge. Play Countdown words and numbers in your browser.">
+  <title>Countdown · Quiz Games</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="./"><span class="brand-icon" aria-hidden="true">Q</span> Quiz Games</a>
+    <a class="source-link" href="https://github.com/saeedghsh/quiz_games">View source <span aria-hidden="true">↗</span></a>
+  </header>
+  <main>
+    <div class="intro"><p class="eyebrow">THE DAILY BRAIN STRETCH</p><h1>Make every second count.</h1><p>A handful of letters. A set of numbers. See what you can make.</p></div>
+    <div id="loading" class="notice" role="status">Getting the games ready… The first visit may take a moment.</div>
+    <div id="error" class="notice error" role="alert" hidden><span id="error-text"></span> <button id="retry" type="button">Reload game</button></div>
+    <div id="app" hidden>
+      <div class="game-bar">
+        <div class="mode-picker" role="group" aria-label="Game mode">
+          <button id="words-mode" class="mode active" aria-pressed="true"><span aria-hidden="true">Aa</span> Words</button>
+          <button id="numbers-mode" class="mode" aria-pressed="false"><span aria-hidden="true">123</span> Numbers</button>
+        </div>
+        <span class="round-tag" id="round-tag">A fresh challenge awaits</span>
+      </div>
+      <div class="layout">
+        <section class="board" aria-labelledby="game-title">
+          <div class="board-heading"><div><p class="eyebrow" id="game-kicker">THE LETTERS ROUND</p><h2 id="game-title">Find your longest word.</h2></div><div class="clock" aria-label="Time remaining"><span id="time">30</span><small>SECONDS</small></div></div>
+          <p id="instruction" class="muted">Choose your settings, then start a round.</p>
+          <div id="target-panel" class="target-panel" hidden><span>YOUR TARGET</span><strong id="target">—</strong></div>
+          <div id="tiles" class="tiles" role="group" aria-label="Drawn tiles"></div>
+          <div class="draw-controls" id="draw-controls" hidden><button id="vowel">+ Vowel</button><button id="consonant">+ Consonant</button><button id="fill" class="text-button">Fill the rest ↗</button></div>
+          <div id="timer-track" class="timer-track" aria-hidden="true"><div id="timer-progress"></div></div>
+          <form id="answer-form" hidden>
+            <label for="answer" id="answer-label">Your word or words</label>
+            <div class="answer-row"><input id="answer" name="answer" maxlength="500" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="What can you make?"><button type="submit" class="primary" id="submit">Submit answer <span aria-hidden="true">↗</span></button></div>
+            <div class="answer-help"><small id="answer-help">Separate multiple words with spaces. Your longest valid word scores.</small><button type="button" id="skip" class="text-button">Skip round</button></div>
+          </form>
+          <p id="feedback" role="status" class="feedback" hidden></p>
+          <section id="results" class="results" aria-labelledby="result-title" hidden>
+            <div class="result-heading"><h3 id="result-title">Round complete</h3><strong id="score"></strong></div>
+            <div id="result-detail"></div>
+            <div class="solution"><p class="eyebrow">FROM THE SOLVER</p><p id="solution-status" role="status"></p><div id="solutions"></div></div>
+          </section>
+          <div id="empty-state" class="empty-state"><span aria-hidden="true">✳</span><p>Small puzzles. Satisfying possibilities.</p><small>Your next challenge starts here.</small></div>
+        </section>
+        <aside>
+          <section class="settings"><p class="eyebrow">MAKE IT YOUR ROUND</p><h2>Round settings</h2>
+            <label for="duration">Thinking time</label><select id="duration"><option value="30">30 seconds · Classic</option><option value="60">60 seconds · Take your time</option><option value="0">No timer · Just exploring</option></select>
+            <div id="letter-setting"><label for="letter-count">Number of letters</label><select id="letter-count"><option>6</option><option>7</option><option>8</option><option selected>9</option><option>10</option><option>11</option><option>12</option></select></div>
+            <div id="number-setting" hidden><label for="big-count">Big numbers</label><select id="big-count"><option value="0">0 · All small</option><option value="1">1 big number</option><option value="2" selected>2 big numbers</option><option value="3">3 big numbers</option><option value="4">4 big numbers</option></select></div>
+            <button id="new-round" class="primary start">Start round <span aria-hidden="true">→</span></button>
+            <p class="settings-note">A fresh draw, every time.</p>
+          </section>
+          <section class="rules"><p class="eyebrow">A QUICK REFRESHER</p><h3>How to play</h3><div id="rules-text"><p>Build the longest dictionary word you can from the letters on the board.</p><p>Use each tile only once. Each letter in your longest valid word earns one point.</p></div><p class="timer-note">The timer is for thinking. When it ends, you can still declare your answer.</p></section>
+        </aside>
+      </div>
+    </div>
+  </main>
+  <footer><span>A little practice for a curious mind.</span><span>Open source · <a href="./LICENSE">GPL-3.0</a></span></footer>
+</body>
+</html>

@@ -44,14 +44,17 @@ class LetterCountdown:
             clear_line_content()
 
     def select_letter(self) -> str:
-        letter_type = LetterCountdown.vowel_or_consonant()
+        return self.draw_letter(LetterCountdown.vowel_or_consonant())
+
+    def draw_letter(self, letter_type: str) -> str:
+        """Draw a weighted letter without terminal input (shared by both UIs)."""
         if letter_type == "v":
             letters = self.word_corpus.vowels
         elif letter_type == "c":
             letters = self.word_corpus.consonants
         else:
             raise ValueError(f"Unrecognized letter type: {letter_type}.")
-        weights = [self.word_corpus.letter_distribution[letter] for letter in letters]
+        weights = [self.word_corpus.letter_distribution.get(letter, 0) for letter in letters]
         return random.choices(letters, weights, k=1)[0]  # 'k=1' means one item
 
     def select_letters(self):

@@ -1,6 +1,7 @@
 """SCOWL (Spell Checker Oriented Word Lists) word list"""
 
 from typing import List
+from pathlib import Path
 
 
 def load_word_list(dict_name: str = "en_US") -> List[str]:
@@ -11,6 +12,6 @@ def load_word_list(dict_name: str = "en_US") -> List[str]:
         "en_CA": "en_CA-large.txt",
         "en_AU": "en_AU-large.txt",
     }[dict_name]
-    with open("scowl/" + file_name, encoding="utf-8", mode="r") as file:
+    with open(Path(__file__).with_name(file_name), encoding="utf-8", mode="r") as file:
         words = [line.strip() for line in file]
     return words

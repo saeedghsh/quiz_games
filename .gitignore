@@ -6,8 +6,14 @@ logs/
 
 *.pyc
 *~
-__init__.py
 
 htmlcov/
 .coverage
 coverage.xml
+.venv/
+.pytest_cache/
+__pycache__/
+*.egg-info/
+dist/
+build/
+_site/

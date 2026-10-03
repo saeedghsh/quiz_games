@@ -106,5 +106,10 @@ def main(argv: Sequence[str]) -> int:
     raise ValueError(f"Unrecognized command: {args.command}")
 
 
+def cli() -> int:
+    """Installed terminal entry point."""
+    return main(sys.argv[1:])
+
+
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    sys.exit(cli())

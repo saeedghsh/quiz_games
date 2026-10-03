@@ -2,10 +2,8 @@
 
 import ast
 from collections import Counter, defaultdict
-from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 import random
-import select
 import sys
 import time
 from typing import DefaultDict, Dict, List, Optional, Sequence, Set, Tuple
@@ -587,6 +585,8 @@ def _is_past_deadline(deadline: float) -> bool:
 
 
 def play_number_round(timer_seconds: int) -> None:
+    from concurrent.futures import ThreadPoolExecutor
+
     big_number_count = ask_big_number_count()
     number_round = draw_number_round(big_number_count)
 
@@ -626,6 +626,8 @@ def _read_user_evaluation(number_round: NumberRound) -> ExpressionEvaluation:
 
 
 def _wait_for_ready_or_timeout(seconds: int) -> None:
+    import select
+
     if seconds <= 0:
         return
 

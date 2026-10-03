@@ -1,10 +1,43 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quiz-games"
+version = "0.2.0"
+description = "Countdown games for the terminal and browser, sharing a Python engine"
+readme = "README.md"
+license = "GPL-3.0-only"
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+quiz-games = "main:cli"
+
+[dependency-groups]
+dev = ["pytest>=8,<10", "pytest-cov>=6,<8", "pytest-mock>=3.14,<4"]
+browser = ["playwright>=1.55,<2"]
+
+[tool.setuptools]
+py-modules = ["main"]
+
+[tool.setuptools.packages.find]
+include = ["countdown*", "scowl*", "utilities*"]
+
+[tool.setuptools.package-data]
+scowl = ["*.txt"]
+
+[tool.quiz-games.browser]
+pyodide-version = "0.28.3"
+python-version = "3.13"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-v --cov=. --cov-report=term-missing"
 python_files = ["test_*.py"]
+markers = ["browser: real-browser tests that download Pyodide from its CDN"]
 filterwarnings = [
     "ignore::DeprecationWarning",
-    "ignore::duckdb_engine.DuckDBEngineWarning",
 ]
 
 
