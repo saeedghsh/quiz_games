@@ -41,7 +41,8 @@ See `countdown/data/NOTICE.txt` for the reproducible import command.
 uv run quiz-games countdown-words --language fa --number-of-letters 9 --timer 30
 ```
 
-Press Enter to draw each Farsi tile, then enter one answer per line. An empty
+Choose a vowel with `v`, `م`, or `مصوت`, or a consonant with `c`, `ص`, or `صامت`
+for each Farsi tile, then enter one answer per line. An empty
 answer finishes the round. Replay accepts `بله`/`خیر` or `y`/`n`. English remains
 the default (`--language en`); the numbers game is unaffected. Use a UTF-8
 terminal with Persian shaping and bidirectional text support for readable

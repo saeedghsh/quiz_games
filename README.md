@@ -32,7 +32,7 @@ uv run quiz-games countdown-numbers
 ```
 
 The original entry point also works: `uv run python main.py countdown-words`.
-Farsi rounds use Persian prompts and full-alphabet letter draws. See
+Farsi rounds use Persian prompts and vowel/consonant letter choices. See
 [Farsi rules and dictionary](docs/farsi_words.md) for normalization and scoring.
 
 ## Play in the browser

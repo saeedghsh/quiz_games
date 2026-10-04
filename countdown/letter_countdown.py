@@ -34,20 +34,24 @@ class LetterCountdown:
         self.letters = []
 
     @staticmethod
-    def vowel_or_consonant() -> str:
+    def vowel_or_consonant(language: str = "en") -> str:
         """Method to ask user to input letter type, vowel or consonant"""
+        prompt = (
+            "مصوت (ا، آ، و، ی) یا صامت؟ [v/c یا م/ص]: "
+            if language == "fa" else "Vowel or consonant [v/c]? "
+        )
+        choices = {"v": "v", "c": "c"}
+        if language == "fa":
+            choices.update({"م": "v", "مصوت": "v", "ص": "c", "صامت": "c"})
         while True:
-            letter_type = input("Vowel or consonant [v/c]? ").lower()
-            if letter_type in ["v", "c"]:
-                return letter_type
+            letter_type = input(prompt).strip().lower()
+            if letter_type in choices:
+                return choices[letter_type]
             move_cursor_up(1)
             clear_line_content()
 
     def select_letter(self) -> str:
-        if self.word_corpus.language == "fa":
-            input("برای انتخاب یک حرف، Enter را بزنید: ")
-            return self.draw_letter()
-        return self.draw_letter(LetterCountdown.vowel_or_consonant())
+        return self.draw_letter(LetterCountdown.vowel_or_consonant(self.word_corpus.language))
 
     def draw_letter(self, letter_type: str = "letter") -> str:
         """Draw a weighted letter without terminal input (shared by both UIs)."""

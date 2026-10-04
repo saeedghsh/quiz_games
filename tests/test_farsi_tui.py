@@ -14,8 +14,8 @@ def test_language_argument_defaults_and_validation():
 
 def test_complete_farsi_rounds_and_normalized_score(monkeypatch, capsys):
     letters = iter("کتابها" * 2)
-    answers = iter(["", "", "", "", "", "", "كِتاب‌ها", "", "بله",
-                    "", "", "", "", "", "", "", "خیر"])
+    answers = iter(["ص", "صامت", "م", "c", "ص", "v", "كِتاب‌ها", "", "بله",
+                    "c", "ص", "مصوت", "صامت", "c", "v", "", "خیر"])
     prompts = []
 
     def respond(prompt):
@@ -29,8 +29,27 @@ def test_complete_farsi_rounds_and_normalized_score(monkeypatch, capsys):
     assert "امتیاز: 6" in output
     assert "زمان تمام شد" in output
     assert "بلندترین واژه‌ها" in output
-    assert sum("انتخاب یک حرف" in prompt for prompt in prompts) == 12
+    assert sum("مصوت" in prompt for prompt in prompts) == 12
     assert all("Vowel or consonant" not in prompt for prompt in prompts)
+
+
+@pytest.mark.parametrize("choice,kind", [("م", "v"), ("مصوت", "v"), ("V", "v"),
+                                         ("ص", "c"), ("صامت", "c"), ("C", "c")])
+def test_farsi_tui_choice_reaches_correct_pool(monkeypatch, choice, kind):
+    from countdown.farsi import FARSI_ALPHABET, FARSI_VOWELS, normalize_farsi
+    from countdown.letter_countdown import LetterCountdown
+    from countdown.word_corpus import WordCorpus
+
+    game = LetterCountdown(WordCorpus(
+        lambda: ["کتاب"], alphabet=FARSI_ALPHABET, vowels=FARSI_VOWELS,
+        normalizer=normalize_farsi, language="fa",
+    ))
+    answers = iter(["invalid", choice])
+    monkeypatch.setattr("builtins.input", lambda prompt: next(answers))
+    drawn = []
+    monkeypatch.setattr(game, "draw_letter", lambda selected: drawn.append(selected) or "ا")
+    assert game.select_letter() == "ا"
+    assert drawn == [kind]
 
 
 def test_english_terminal_still_plays(monkeypatch, capsys):
