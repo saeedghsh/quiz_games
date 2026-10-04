@@ -1,3 +1,5 @@
+import { attachFarsiKeyboard } from "./farsi-keyboard.js";
+
 const $ = (id) => document.getElementById(id);
 const pending = new Map();
 let worker;
@@ -101,7 +103,7 @@ function configureMode() {
   $("game-title").textContent = words ? translated("Find your longest word.", "بلندترین واژه را بسازید.") : "Get as close as you can.";
   $("answer-label").textContent = words ? translated("Your word or words", "واژه‌های شما") : "Your calculation";
   $("answer").placeholder = words ? translated("What can you make?", "چه واژه‌ای می‌توانید بسازید؟") : "For example: (25 + 3) * 7";
-  $("answer-help").textContent = words ? translated("Separate multiple words with spaces. Your longest valid word scores.", "واژه‌ها را با فاصله یا «،» جدا کنید. نیم‌فاصله امتیاز ندارد.") : "Use +, -, *, / and parentheses. Division must give a whole number.";
+  $("answer-help").textContent = words ? translated("Separate multiple words with spaces. Your longest valid word scores.", "صفحه‌کلید خودکار فارسی است. واژه‌ها را با فاصله یا «،» جدا کنید؛ Shift+Space برای نیم‌فاصله.") : "Use +, -, *, / and parentheses. Division must give a whole number.";
   $("vowel").textContent = translated("+ Vowel", "+ مصوت");
   $("vowel").title = translated("a, e, i, o, u", "ا، آ، و، ی");
   $("consonant").textContent = translated("+ Consonant", "+ صامت");
@@ -255,6 +257,7 @@ $("answer-form").addEventListener("submit", (event) => {
   event.preventDefault();
   run(() => finish($("answer").value));
 });
+attachFarsiKeyboard($("answer"), () => farsiRound() && state.phase === "playing" && !busy);
 $("skip").addEventListener("click", () => run(() => finish("")));
 $("retry").addEventListener("click", () => location.reload());
 $("duration").addEventListener("change", () => {

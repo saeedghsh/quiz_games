@@ -83,6 +83,40 @@ def test_real_pyodide_both_games_and_mobile(tmp_path):
             page.screenshot(path=str(tmp_path / "farsi-draw-mobile.png"), full_page=True)
             page.locator("#fill").click()
             expect(page.locator("#answer")).to_have_attribute("dir", "rtl")
+            answer_input = page.locator("#answer")
+            answer_input.fill("")
+            answer_input.press_sequentially("sghl")
+            expect(answer_input).to_have_value("سلام")
+            answer_input.press("Control+a")
+            answer_input.press("Shift+KeyH")
+            answer_input.press("KeyF")
+            expect(answer_input).to_have_value("آب")
+            answer_input.press("Shift+Space")
+            answer_input.press("Shift+KeyC")
+            expect(answer_input).to_have_value("آب\u200cژ")
+            answer_input.press("Backspace")
+            expect(answer_input).to_have_value("آب\u200c")
+            # Physical positions also work when a non-English layout reports
+            # another character (e.g. Swedish ö on the Semicolon key).
+            answer_input.dispatch_event("keydown", {"key": "ö", "code": "Semicolon"})
+            expect(answer_input).to_have_value("آب\u200cک")
+            answer_input.press("Control+a")
+            page.keyboard.insert_text("فارسی")
+            expect(answer_input).to_have_value("فارسی")
+            answer_input.press("Control+a")
+            page.keyboard.insert_text("sghl")
+            expect(answer_input).to_have_value("سلام")
+            # Selection replacement must edit in place instead of appending.
+            answer_input.evaluate("el => el.setSelectionRange(1, 3)")
+            answer_input.press("KeyH")
+            expect(answer_input).to_have_value("سام")
+            answer_input.fill("س" * 500)
+            answer_input.press("KeyH")
+            expect(answer_input).to_have_value("س" * 500)
+            answer_input.press("Control+a")
+            answer_input.press_sequentially("sghl")
+            answer_input.press("Control+z")
+            expect(answer_input).not_to_have_value("سلام")
             # Compare this random round with native Python; even a draw with no
             # solutions has a deterministic expected score and solver result.
             from countdown.farsi import farsi_corpus
@@ -117,6 +151,10 @@ def test_real_pyodide_both_games_and_mobile(tmp_path):
             expect(page.locator("#consonant")).to_have_text("+ Consonant")
             expect(page.locator("#results")).to_be_hidden()
             expect(page.locator("#answer")).to_have_value("")
+            page.locator("#fill").click()
+            expect(page.locator("#answer")).to_be_enabled()
+            page.locator("#answer").press_sequentially("cat")
+            expect(page.locator("#answer")).to_have_value("cat")
             assert not errors
             browser.close()
     finally:

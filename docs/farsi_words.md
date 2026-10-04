@@ -61,6 +61,16 @@ text with right-to-left layout; the site navigation and settings remain English.
 Enter multiple answers separated by spaces or a Persian comma (`،`). The longest
 valid answer scores. نیم‌فاصله inside a word stays within the same answer.
 
+The browser answer field uses standard Persian physical key positions even
+when the operating-system keyboard layout is English or another language:
+`sghl` types `سلام`, `Shift+H` types `آ`, `Shift+C` types `ژ`, and `Shift+Space`
+inserts نیم‌فاصله. The mapping follows the
+[standard Persian keyboard](https://unicode.org/cldr/charts/43/keyboards/layouts/fa.html#fa-t-k0-windows-extended).
+Already-Persian typing and composition are preserved. Keyboard shortcuts,
+editing keys, and pasted text retain their usual behavior. Virtual keyboards
+without physical key codes map Latin letters using QWERTY positions.
+This input mapping applies only to the browser's Farsi answer field.
+
 The browser runs the same Python dictionary, normalization, scoring, and solver
 as the terminal. The static Pages artifact bundles the dictionary and its
 license, and requires no additional runtime downloads for Farsi. The selected
