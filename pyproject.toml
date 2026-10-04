@@ -26,6 +26,7 @@ include = ["countdown*", "scowl*", "utilities*"]
 
 [tool.setuptools.package-data]
 scowl = ["*.txt"]
+countdown = ["data/*.txt"]
 
 [tool.quiz-games.browser]
 pyodide-version = "0.28.3"

@@ -1,0 +1,20 @@
+Farsi word list for Quiz Games
+
+Derived from Lilak, Persian Spell Checking Dictionary
+Copyright 2015 Mostafa Sedaghat Joo
+https://github.com/b00f/lilak
+Revision: 4f1f426113e764ea099865232fd5e0fa34563c60
+Source file: src/data/lexicon
+License: Apache License 2.0 (see LICENSE-lilak.txt)
+
+Modifications: extracted the word column; normalized Arabic keyboard variants,
+presentation forms and optional vowel marks; removed non-letter entries and
+duplicates; sorted the remaining 85,705 surface forms. Internal Persian
+half-spaces are retained. Hunspell affix rules are not expanded. Proper names
+and uncommon words present in the source are included.
+
+Reproduce from the pinned checkout:
+python scripts/import_farsi_dictionary.py /path/to/lilak/src/data/lexicon countdown/data/fa_words.txt
+
+The importer verifies the source SHA-256 before processing. No dictionary
+downloads or external Python packages are needed when playing the game.

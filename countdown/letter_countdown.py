@@ -28,7 +28,7 @@ class LetterCountdown:
 
     @letters.setter
     def letters(self, value: List[str]):
-        self._letters = value
+        self._letters = list(self.word_corpus.tile_text("".join(value)))
 
     def reset_letters(self):
         self.letters = []
@@ -46,9 +46,13 @@ class LetterCountdown:
     def select_letter(self) -> str:
         return self.draw_letter(LetterCountdown.vowel_or_consonant())
 
-    def draw_letter(self, letter_type: str) -> str:
+    def draw_letter(self, letter_type: str = "letter") -> str:
         """Draw a weighted letter without terminal input (shared by both UIs)."""
-        if letter_type == "v":
+        if letter_type == "letter":
+            letters = self.word_corpus.alphabet
+        elif letter_type not in self.word_corpus.draw_kinds:
+            raise ValueError(f"Unrecognized letter type: {letter_type}.")
+        elif letter_type == "v":
             letters = self.word_corpus.vowels
         elif letter_type == "c":
             letters = self.word_corpus.consonants
@@ -70,7 +74,7 @@ class LetterCountdown:
         self.letters = [letter.lower() for letter in letters]
 
     def _is_allowed(self, word: str) -> bool:
-        counter_word = Counter(list(word))
+        counter_word = Counter(self.word_corpus.tile_text("".join(word)))
         counter_allowed_letters = Counter(self.letters)
         for element, count in counter_word.items():
             if counter_allowed_letters[element] < count:
@@ -81,6 +85,10 @@ class LetterCountdown:
         is_allowed = self._is_allowed(list(response))
         is_valid_word = self.word_corpus.is_valid_word(response)
         return is_allowed and is_valid_word
+
+    def score_response(self, response: str) -> int:
+        """Score written letters consistently across terminal and browser UIs."""
+        return self.word_corpus.word_length(response) if self.is_response_valid(response) else 0
 
     @staticmethod
     def get_user_response() -> List[str]:
@@ -98,15 +106,16 @@ class LetterCountdown:
 
     def optimal_solutions(self) -> List[str]:
         """Return all words that would get the highest score"""
-        sorted_words = sorted(self.word_corpus.corpus, key=len, reverse=True)
+        sorted_words = sorted(self.word_corpus.corpus, key=self.word_corpus.word_length, reverse=True)
         word_length = None
         result = []
         for word in sorted_words:
-            if word_length is not None and len(word) < word_length:
+            length = self.word_corpus.word_length(word)
+            if word_length is not None and length < word_length:
                 break
             if self._is_allowed(list(word)):
                 result.append(word)
-                word_length = len(word)
+                word_length = length
         return result
 
 
