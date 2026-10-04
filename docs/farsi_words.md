@@ -13,10 +13,12 @@ assert game.score_response("کتابخانه") == 8
 print(game.optimal_solutions())
 ```
 
-Farsi draws use the full written alphabet, weighted by letter occurrences in
-the dictionary. There is no English-style vowel/consonant split. Each written
-letter consumes one tile and earns one point, and repeated letters require
-repeated tiles.
+Farsi draws offer a vowel pool (`ا آ و ی`) and a consonant pool (all remaining
+written letters), each weighted by letter occurrences in the dictionary.
+This is a gameplay grouping of written tiles, not a phonetic classification:
+`و` and `ی` stay in the vowel pool even when used as consonants in a word.
+Each written letter consumes one tile and earns one point, and repeated
+letters require repeated tiles.
 
 Arabic keyboard `ك` and `ي`/`ى` map to Persian `ک` and `ی`. Unicode presentation
 forms are normalized. Optional short-vowel marks, shadda, tanwin and tatweel

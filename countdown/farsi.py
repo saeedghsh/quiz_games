@@ -7,6 +7,8 @@ from countdown.word_corpus import WordCorpus
 
 # Written forms with hamza are separate tiles, as is alef with madda (آ).
 FARSI_ALPHABET = "اآبپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیءأإؤئ"
+# Gameplay tile pools, rather than a phonetic classification of every use.
+FARSI_VOWELS = "اآوی"
 _KEYBOARD_VARIANTS = str.maketrans({"ك": "ک", "ي": "ی", "ى": "ی", "ـ": ""})
 _OPTIONAL_MARKS = frozenset(chr(code) for code in range(0x064B, 0x0653)) | {"\u0670"}
 
@@ -24,6 +26,6 @@ def load_farsi_words() -> list[str]:
 
 def farsi_corpus() -> WordCorpus:
     return WordCorpus(
-        load_farsi_words, alphabet=FARSI_ALPHABET, vowels="",
+        load_farsi_words, alphabet=FARSI_ALPHABET, vowels=FARSI_VOWELS,
         normalizer=normalize_farsi, ignored_characters="\u200c", language="fa",
     )

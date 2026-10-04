@@ -113,9 +113,9 @@ def test_farsi_round_scores_and_language_switch_reset(game, monkeypatch):
     english = game.corpus
     state = json.loads(game.dispatch('{"action":"new","args":{"language":"fa","letter_count":6}}'))
     assert state["language"] == "fa"
-    assert state["draw_kinds"] == ["letter"]
+    assert state["draw_kinds"] == ["v", "c"]
     with pytest.raises(ValueError):
-        game.draw("v")
+        game.draw("unknown")
     letters = iter("کتابها")
     monkeypatch.setattr(game.words, "draw_letter", lambda kind: next(letters))
     game.fill()
