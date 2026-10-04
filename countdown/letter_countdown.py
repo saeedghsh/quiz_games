@@ -44,6 +44,9 @@ class LetterCountdown:
             clear_line_content()
 
     def select_letter(self) -> str:
+        if self.word_corpus.language == "fa":
+            input("برای انتخاب یک حرف، Enter را بزنید: ")
+            return self.draw_letter()
         return self.draw_letter(LetterCountdown.vowel_or_consonant())
 
     def draw_letter(self, letter_type: str = "letter") -> str:
@@ -68,7 +71,8 @@ class LetterCountdown:
             letter = self.select_letter()
             letters.append(letter)
             clear_line_content()
-            print(f"Selected letters: {' '.join(letter.upper() for letter in letters)}")
+            label = "حروف انتخاب‌شده" if self.word_corpus.language == "fa" else "Selected letters"
+            print(f"{label}: {' '.join(letter.upper() for letter in letters)}")
             if len(letters) < self._number_of_letters:
                 move_cursor_up(2)
         self.letters = [letter.lower() for letter in letters]
@@ -91,10 +95,14 @@ class LetterCountdown:
         return self.word_corpus.word_length(response) if self.is_response_valid(response) else 0
 
     @staticmethod
-    def get_user_response() -> List[str]:
+    def get_user_response(language: str = "en") -> List[str]:
         responses = []
+        prompt = (
+            "واژهٔ خود را بنویسید [Enter خالی برای پایان]: " if language == "fa"
+            else "Enter your answer [empty-enter to stop]:  "
+        )
         while True:
-            response = input("Enter your answer [empty-enter to stop]:  ").lower()
+            response = input(prompt).strip().lower()
             if response:
                 responses.append(response)
             else:
@@ -122,17 +130,23 @@ class LetterCountdown:
 def print_results(responses: List[str], letter_countdown: LetterCountdown):
     for response in responses:
         is_valid = letter_countdown.is_response_valid(response)
-        score = len(response) if is_valid else 0
-        correctness = "correct" if is_valid else "incorrect"
-        print(f"Your answer '{response}' is {correctness}! {score} points!")
+        score = letter_countdown.score_response(response)
+        if letter_countdown.word_corpus.language == "fa":
+            correctness = "درست" if is_valid else "نادرست"
+            print(f"پاسخ «{response}» {correctness} است! امتیاز: {score}")
+        else:
+            correctness = "correct" if is_valid else "incorrect"
+            print(f"Your answer '{response}' is {correctness}! {score} points!")
     print()
 
 
-def print_optimal_solution(solutions: List[str]):
+def print_optimal_solution(solutions: List[str], word_corpus: WordCorpus | None = None):
+    farsi = word_corpus is not None and word_corpus.language == "fa"
     if solutions:
-        print(f"Longest possible word[s] have {len(solutions[0])} letters:")
+        length = word_corpus.word_length(solutions[0]) if word_corpus else len(solutions[0])
+        print(f"بلندترین واژه‌ها {length} حرف دارند:" if farsi else f"Longest possible word[s] have {length} letters:")
         for w in solutions:
             print(f"\t{w}")
     else:
-        print("No word is possible with this combination!")
+        print("با این حروف واژه‌ای پیدا نشد!" if farsi else "No word is possible with this combination!")
     print()

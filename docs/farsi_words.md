@@ -32,3 +32,15 @@ proper names and uncommon entries may be accepted, and affixed words are
 accepted only when explicitly listed. This is not a full morphological spell
 checker. The engine, solver, and scores all use the same normalization rules.
 See `countdown/data/NOTICE.txt` for the reproducible import command.
+
+## Terminal
+
+```bash
+uv run quiz-games countdown-words --language fa --number-of-letters 9 --timer 30
+```
+
+Press Enter to draw each Farsi tile, then enter one answer per line. An empty
+answer finishes the round. Replay accepts `بله`/`خیر` or `y`/`n`. English remains
+the default (`--language en`); the numbers game is unaffected. Use a UTF-8
+terminal with Persian shaping and bidirectional text support for readable
+Persian output; text is stored and emitted in its natural Unicode order.

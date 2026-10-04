@@ -12,13 +12,14 @@ def clear_line_content():
     sys.stdout.write("\033[K")
 
 
-def timer(seconds: int):
+def timer(seconds: int, language: str = "en"):
     signs = ["-", "\\", "|", "/"]
     for i in range(seconds):
-        print(signs[i % len(signs)], f"\t{seconds-i} seconds left")
+        remaining = f"\t{seconds-i} ثانیه باقی مانده" if language == "fa" else f"\t{seconds-i} seconds left"
+        print(signs[i % len(signs)], remaining)
         time.sleep(1)
         if i < seconds - 1:
             move_cursor_up(1)
     move_cursor_up(1)
     clear_line_content()
-    print("Times up!\n")
+    print("زمان تمام شد!\n" if language == "fa" else "Times up!\n")

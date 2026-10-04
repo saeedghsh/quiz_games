@@ -19,7 +19,7 @@ uv sync --locked
 ```
 
 Dependencies and development tools are declared in `pyproject.toml` and locked
-in `uv.lock`. The game uses the Python standard library and bundled SCOWL word
+in `uv.lock`. The game uses the Python standard library and bundled SCOWL/Lilak word
 lists; NLTK is not needed. Python 3.12 or newer is supported.
 
 ## Play in the terminal
@@ -27,10 +27,13 @@ lists; NLTK is not needed. Python 3.12 or newer is supported.
 ```bash
 uv run quiz-games countdown-words
 uv run quiz-games countdown-words --number-of-letters 9 --timer 30
+uv run quiz-games countdown-words --language fa
 uv run quiz-games countdown-numbers
 ```
 
 The original entry point also works: `uv run python main.py countdown-words`.
+Farsi rounds use Persian prompts and full-alphabet letter draws. See
+[Farsi rules and dictionary](docs/farsi_words.md) for normalization and scoring.
 
 ## Play in the browser
 

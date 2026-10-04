@@ -18,12 +18,13 @@ COMMAND_COUNTDOWN_WORDS = "countdown-words"
 COMMAND_COUNTDOWN_NUMBERS = "countdown-numbers"
 
 
-def _keep_playing() -> bool:
+def _keep_playing(language: str = "en") -> bool:
     while True:
-        response = input("Do you want to play more [y/n]? ").lower()
-        if response == "y":
+        prompt = "دوباره بازی می‌کنید؟ [بله/خیر]: " if language == "fa" else "Do you want to play more [y/n]? "
+        response = input(prompt).strip().lower()
+        if response == "y" or (language == "fa" and response in {"بله", "ب"}):
             return True
-        if response == "n":
+        if response == "n" or (language == "fa" and response in {"خیر", "خ"}):
             return False
         move_cursor_up(1)
         clear_line_content()
@@ -36,6 +37,10 @@ def _parse_arguments(argv: Sequence[str]) -> argparse.Namespace:  # pragma: no c
     countdown_words_parser = subparsers.add_parser(
         COMMAND_COUNTDOWN_WORDS,
         help="Play the Countdown words game.",
+    )
+    countdown_words_parser.add_argument(
+        "--language", choices=("en", "fa"), default="en",
+        help="Word language: en (English) or fa (Farsi).",
     )
     countdown_words_parser.add_argument(
         "-n",
@@ -69,17 +74,22 @@ def _parse_arguments(argv: Sequence[str]) -> argparse.Namespace:  # pragma: no c
 def _play_countdown_words(args: argparse.Namespace) -> int:
     from scowl import scowl  # pylint: disable=import-outside-toplevel
 
-    word_corpus = WordCorpus(word_corpus_loader=scowl.load_word_list)
+    if args.language == "fa":
+        from countdown.farsi import farsi_corpus
+
+        word_corpus = farsi_corpus()
+    else:
+        word_corpus = WordCorpus(word_corpus_loader=scowl.load_word_list)
     letter_countdown = LetterCountdown(word_corpus, args.number_of_letters)
 
     while True:
         letter_countdown.select_letters()
-        timer(seconds=args.timer)
-        responses = letter_countdown.get_user_response()
+        timer(seconds=args.timer, language=args.language)
+        responses = letter_countdown.get_user_response(language=args.language)
         print_results(responses, letter_countdown)
         optimal_solutions = letter_countdown.optimal_solutions()
-        print_optimal_solution(optimal_solutions)
-        if not _keep_playing():
+        print_optimal_solution(optimal_solutions, word_corpus)
+        if not _keep_playing(args.language):
             break
 
     return os.EX_OK
