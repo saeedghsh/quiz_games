@@ -66,10 +66,18 @@ def test_real_pyodide_both_games_and_mobile(tmp_path):
             page.locator("#word-language").select_option("fa")
             expect(page.locator(".board")).to_have_attribute("dir", "rtl")
             expect(page.locator(".board")).to_have_attribute("lang", "fa")
-            expect(page.locator("#vowel")).to_be_hidden()
+            expect(page.locator("#vowel")).to_have_text("+ مصوت")
+            expect(page.locator("#consonant")).to_have_text("+ صامت")
             expect(page.locator(".tile:not(.blank)")).to_have_count(0)
-            page.locator("#draw-letter").click()
+            page.locator("#vowel").click()
             expect(page.locator(".tile:not(.blank)")).to_have_count(1)
+            from countdown.farsi import FARSI_ALPHABET, FARSI_VOWELS
+
+            assert page.locator(".tile").nth(0).inner_text() in FARSI_VOWELS
+            page.locator("#consonant").click()
+            expect(page.locator(".tile:not(.blank)")).to_have_count(2)
+            assert page.locator(".tile").nth(1).inner_text() in set(FARSI_ALPHABET) - set(FARSI_VOWELS)
+            page.screenshot(path=str(tmp_path / "farsi-draw-mobile.png"), full_page=True)
             page.locator("#fill").click()
             expect(page.locator("#answer")).to_have_attribute("dir", "rtl")
             # Compare this random round with native Python; even a draw with no
@@ -100,6 +108,8 @@ def test_real_pyodide_both_games_and_mobile(tmp_path):
             page.locator("#word-language").select_option("en")
             expect(page.locator(".board")).to_have_attribute("dir", "ltr")
             expect(page.locator("#vowel")).to_be_visible()
+            expect(page.locator("#vowel")).to_have_text("+ Vowel")
+            expect(page.locator("#consonant")).to_have_text("+ Consonant")
             expect(page.locator("#results")).to_be_hidden()
             expect(page.locator("#answer")).to_have_value("")
             assert not errors

@@ -51,7 +51,8 @@ Persian output; text is stored and emitted in its natural Unicode order.
 ## Browser
 
 In Words mode, choose **فارسی — Farsi** under **Word language / زبان واژه‌ها**.
-Changing the language starts a fresh round. Use **+ حرف** to draw one tile or
+Changing the language starts a fresh round. Use **+ مصوت** to draw a vowel,
+**+ صامت** to draw a consonant, or
 **انتخاب بقیهٔ حروف** to fill the board. The game panel and rules use Persian
 text with right-to-left layout; the site navigation and settings remain English.
 Enter multiple answers separated by spaces or a Persian comma (`،`). The longest

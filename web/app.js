@@ -101,9 +101,9 @@ function configureMode() {
   $("answer-label").textContent = words ? translated("Your word or words", "واژه‌های شما") : "Your calculation";
   $("answer").placeholder = words ? translated("What can you make?", "چه واژه‌ای می‌توانید بسازید؟") : "For example: (25 + 3) * 7";
   $("answer-help").textContent = words ? translated("Separate multiple words with spaces. Your longest valid word scores.", "واژه‌ها را با فاصله یا «،» جدا کنید. نیم‌فاصله امتیاز ندارد.") : "Use +, -, *, / and parentheses. Division must give a whole number.";
-  $("vowel").hidden = farsi;
-  $("consonant").hidden = farsi;
-  $("draw-letter").hidden = !farsi;
+  $("vowel").textContent = translated("+ Vowel", "+ مصوت");
+  $("vowel").title = translated("a, e, i, o, u", "ا، آ، و، ی");
+  $("consonant").textContent = translated("+ Consonant", "+ صامت");
   $("fill").textContent = translated("Fill the rest ↗", "انتخاب بقیهٔ حروف ↖");
   $("submit").textContent = translated("Submit answer ↗", "ثبت پاسخ ↖");
   $("skip").textContent = translated("Skip round", "رد کردن این دور");
@@ -118,7 +118,8 @@ function configureMode() {
   rules.querySelector(".timer-note").textContent = translated("The timer is for thinking. When it ends, you can still declare your answer.", "زمان‌سنج برای فکر کردن است. پس از پایان زمان هم می‌توانید پاسخ خود را بنویسید.");
   const paragraphs = farsi ? [
     "با حروف روی صفحه بلندترین واژه را بسازید. هر حرف فقط یک بار قابل استفاده است.",
-    "حروف از کل الفبا انتخاب می‌شوند. هر حرف در بلندترین پاسخ درست، یک امتیاز دارد.",
+    "برای هر حرف، مصوت یا صامت را انتخاب کنید. هر حرف در بلندترین پاسخ درست، یک امتیاز دارد.",
+    "در این بازی، گروه مصوت شامل «ا، آ، و، ی» است و بقیهٔ حروف در گروه صامت هستند. این تقسیم‌بندی برای انتخاب حروف بازی است.",
     "ک و ی عربی پذیرفته می‌شوند. حرکت‌ها و نیم‌فاصله شمرده نمی‌شوند. «آ» و «ا» دو حرف جدا هستند.",
   ] : words ? [
     "Build the longest dictionary word you can from the letters on the board.",
@@ -157,7 +158,7 @@ function render(next) {
   $("new-round").innerHTML = state.phase === "idle" ? 'Start round <span aria-hidden="true">→</span>' : 'New round <span aria-hidden="true">↻</span>';
   const instructions = {
     idle: "Choose your settings, then start a round.",
-    selecting: translated(`Choose a vowel or consonant. ${count - state.tiles.length} tiles to go.`, `${count - state.tiles.length} حرف دیگر انتخاب کنید.`),
+    selecting: translated(`Choose a vowel or consonant. ${count - state.tiles.length} tiles to go.`, `مصوت یا صامت را انتخاب کنید. ${count - state.tiles.length} حرف باقی مانده است.`),
     playing: words ? translated("The letters are yours. Find the longest word you can.", "با این حروف بلندترین واژه را پیدا کنید.") : "Make the target using some or all of your numbers.",
     finished: translated("Nicely played. Ready for another?", "این دور تمام شد. آمادهٔ دور بعدی هستید؟"),
   };
@@ -238,7 +239,7 @@ for (const nextMode of ["words", "numbers"]) {
     await newRound();
   }));
 }
-for (const [id, kind] of [["vowel", "v"], ["consonant", "c"], ["draw-letter", "letter"]]) {
+for (const [id, kind] of [["vowel", "v"], ["consonant", "c"]]) {
   $(id).addEventListener("click", () => run(async () => render(await request("draw", { kind }))));
 }
 $("fill").addEventListener("click", () => run(async () => render(await request("fill"))));
