@@ -51,6 +51,9 @@ Persian output; text is stored and emitted in its natural Unicode order.
 ## Browser
 
 In Words mode, choose **فارسی — Farsi** under **Word language / زبان واژه‌ها**.
+Each language starts with nine letters and remembers its own selected count
+for the current page session. Changing the English count does not change the
+Farsi default.
 Changing the language starts a fresh round. Use **+ مصوت** to draw a vowel,
 **+ صامت** to draw a consonant, or
 **انتخاب بقیهٔ حروف** to fill the board. The game panel and rules use Persian

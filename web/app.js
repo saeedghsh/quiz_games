@@ -9,6 +9,7 @@ let round = 0;
 let timer;
 let deadline;
 let duration = 30;
+const letterCounts = { en: 9, fa: 9 };
 
 function farsiRound() { return mode === "words" && state.language === "fa"; }
 function translated(english, farsi) { return farsiRound() ? farsi : english; }
@@ -243,7 +244,13 @@ for (const [id, kind] of [["vowel", "v"], ["consonant", "c"]]) {
   $(id).addEventListener("click", () => run(async () => render(await request("draw", { kind }))));
 }
 $("fill").addEventListener("click", () => run(async () => render(await request("fill"))));
-$("word-language").addEventListener("change", () => run(newRound));
+$("letter-count").addEventListener("change", () => {
+  letterCounts[$("word-language").value] = Number($("letter-count").value);
+});
+$("word-language").addEventListener("change", () => {
+  $("letter-count").value = String(letterCounts[$("word-language").value]);
+  run(newRound);
+});
 $("answer-form").addEventListener("submit", (event) => {
   event.preventDefault();
   run(() => finish($("answer").value));
