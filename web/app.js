@@ -10,6 +10,9 @@ let timer;
 let deadline;
 let duration = 30;
 
+function farsiRound() { return mode === "words" && state.language === "fa"; }
+function translated(english, farsi) { return farsiRound() ? farsi : english; }
+
 function fatal(error) {
   clearInterval(timer);
   worker?.terminate();
@@ -71,7 +74,7 @@ function startTimer() {
     if (!remaining) {
       clearInterval(timer);
       $("time").parentElement.classList.add("expired");
-      $("instruction").textContent = "Time’s up! Declare your answer when you’re ready.";
+      $("instruction").textContent = translated("Time’s up! Declare your answer when you’re ready.", "زمان تمام شد! واژهٔ خود را بنویسید.");
     }
   };
   timer = setInterval(tick, 200);
@@ -80,18 +83,44 @@ function startTimer() {
 
 function configureMode() {
   const words = mode === "words";
+  const farsi = farsiRound();
+  const board = document.querySelector(".board");
+  board.dir = farsi ? "rtl" : "ltr";
+  board.lang = farsi ? "fa" : "en";
+  $("answer").dir = farsi ? "rtl" : "ltr";
+  $("answer").lang = farsi ? "fa" : "en";
   $("words-mode").classList.toggle("active", words);
   $("numbers-mode").classList.toggle("active", !words);
   $("words-mode").setAttribute("aria-pressed", String(words));
   $("numbers-mode").setAttribute("aria-pressed", String(!words));
   $("letter-setting").hidden = !words;
+  $("language-setting").hidden = !words;
   $("number-setting").hidden = words;
-  $("game-kicker").textContent = words ? "THE LETTERS ROUND" : "THE NUMBERS ROUND";
-  $("game-title").textContent = words ? "Find your longest word." : "Get as close as you can.";
-  $("answer-label").textContent = words ? "Your word or words" : "Your calculation";
-  $("answer").placeholder = words ? "What can you make?" : "For example: (25 + 3) * 7";
-  $("answer-help").textContent = words ? "Separate multiple words with spaces. Your longest valid word scores." : "Use +, -, *, / and parentheses. Division must give a whole number.";
-  const paragraphs = words ? [
+  $("game-kicker").textContent = words ? translated("THE LETTERS ROUND", "بازی واژه‌های فارسی") : "THE NUMBERS ROUND";
+  $("game-title").textContent = words ? translated("Find your longest word.", "بلندترین واژه را بسازید.") : "Get as close as you can.";
+  $("answer-label").textContent = words ? translated("Your word or words", "واژه‌های شما") : "Your calculation";
+  $("answer").placeholder = words ? translated("What can you make?", "چه واژه‌ای می‌توانید بسازید؟") : "For example: (25 + 3) * 7";
+  $("answer-help").textContent = words ? translated("Separate multiple words with spaces. Your longest valid word scores.", "واژه‌ها را با فاصله یا «،» جدا کنید. نیم‌فاصله امتیاز ندارد.") : "Use +, -, *, / and parentheses. Division must give a whole number.";
+  $("vowel").hidden = farsi;
+  $("consonant").hidden = farsi;
+  $("draw-letter").hidden = !farsi;
+  $("fill").textContent = translated("Fill the rest ↗", "انتخاب بقیهٔ حروف ↖");
+  $("submit").textContent = translated("Submit answer ↗", "ثبت پاسخ ↖");
+  $("skip").textContent = translated("Skip round", "رد کردن این دور");
+  $("result-title").textContent = translated("Round complete", "پایان این دور");
+  document.querySelector(".clock small").textContent = translated("SECONDS", "ثانیه");
+  document.querySelector(".solution .eyebrow").textContent = translated("FROM THE SOLVER", "پاسخ‌های پیشنهادی");
+  const rules = document.querySelector(".rules");
+  rules.dir = farsi ? "rtl" : "ltr";
+  rules.lang = farsi ? "fa" : "en";
+  rules.querySelector("h3").textContent = translated("How to play", "روش بازی");
+  rules.querySelector(".eyebrow").textContent = translated("A QUICK REFRESHER", "یادآوری کوتاه");
+  rules.querySelector(".timer-note").textContent = translated("The timer is for thinking. When it ends, you can still declare your answer.", "زمان‌سنج برای فکر کردن است. پس از پایان زمان هم می‌توانید پاسخ خود را بنویسید.");
+  const paragraphs = farsi ? [
+    "با حروف روی صفحه بلندترین واژه را بسازید. هر حرف فقط یک بار قابل استفاده است.",
+    "حروف از کل الفبا انتخاب می‌شوند. هر حرف در بلندترین پاسخ درست، یک امتیاز دارد.",
+    "ک و ی عربی پذیرفته می‌شوند. حرکت‌ها و نیم‌فاصله شمرده نمی‌شوند. «آ» و «ا» دو حرف جدا هستند.",
+  ] : words ? [
     "Build the longest dictionary word you can from the letters on the board.",
     "Use each tile only once. Each letter in your longest valid word earns one point.",
   ] : [
@@ -107,6 +136,7 @@ function configureMode() {
 function render(next) {
   const previousPhase = state.phase;
   state = next;
+  configureMode();
   const words = mode === "words";
   const count = words ? (state.letter_count || Number($("letter-count").value)) : 6;
   $("tiles").classList.toggle("numbers", !words);
@@ -127,13 +157,13 @@ function render(next) {
   $("new-round").innerHTML = state.phase === "idle" ? 'Start round <span aria-hidden="true">→</span>' : 'New round <span aria-hidden="true">↻</span>';
   const instructions = {
     idle: "Choose your settings, then start a round.",
-    selecting: `Choose a vowel or consonant. ${count - state.tiles.length} tiles to go.`,
-    playing: words ? "The letters are yours. Find the longest word you can." : "Make the target using some or all of your numbers.",
-    finished: "Nicely played. Ready for another?",
+    selecting: translated(`Choose a vowel or consonant. ${count - state.tiles.length} tiles to go.`, `${count - state.tiles.length} حرف دیگر انتخاب کنید.`),
+    playing: words ? translated("The letters are yours. Find the longest word you can.", "با این حروف بلندترین واژه را پیدا کنید.") : "Make the target using some or all of your numbers.",
+    finished: translated("Nicely played. Ready for another?", "این دور تمام شد. آمادهٔ دور بعدی هستید؟"),
   };
   $("instruction").textContent = instructions[state.phase];
   if (state.phase === "playing" && deadline && Date.now() >= deadline) {
-    $("instruction").textContent = "Time’s up! Declare your answer when you’re ready.";
+    $("instruction").textContent = translated("Time’s up! Declare your answer when you’re ready.", "زمان تمام شد! واژهٔ خود را بنویسید.");
   }
   if (state.phase === "playing" && previousPhase !== "playing") startTimer();
   if (state.phase === "finished") {
@@ -148,7 +178,7 @@ function render(next) {
 
 function showResult() {
   const result = state.result;
-  $("score").textContent = `${result.score} ${result.score === 1 ? "point" : "points"}`;
+  $("score").textContent = translated(`${result.score} ${result.score === 1 ? "point" : "points"}`, `${result.score} امتیاز`);
   $("result-detail").replaceChildren();
   if (mode === "words") {
     for (const answer of result.answers) {
@@ -157,14 +187,14 @@ function showResult() {
       chip.textContent = `${answer.valid ? "✓" : "×"} ${answer.word}`;
       $("result-detail").append(chip);
     }
-    if (!result.answers.length) $("result-detail").textContent = "No word declared this round.";
+    if (!result.answers.length) $("result-detail").textContent = translated("No word declared this round.", "در این دور واژه‌ای ثبت نشد.");
   } else {
     $("result-detail").textContent = result.is_valid
       ? `${result.answer} = ${result.value}. ${result.distance === 0 ? "Right on target!" : `${result.distance} away from the target.`}`
       : "No calculation declared this round.";
   }
   $("solutions").replaceChildren();
-  $("solution-status").textContent = "Finding the best possibilities…";
+  $("solution-status").textContent = translated("Finding the best possibilities…", "در حال یافتن بهترین واژه‌ها…");
 }
 
 async function finish(answer) {
@@ -174,11 +204,11 @@ async function finish(answer) {
   try {
     solution = await request("solve");
   } catch (error) {
-    $("solution-status").textContent = "The solver could not finish this round. You can start a new round.";
+    $("solution-status").textContent = translated("The solver could not finish this round. You can start a new round.", "جست‌وجوی واژه‌ها کامل نشد. می‌توانید دور تازه‌ای شروع کنید.");
     throw error;
   }
   if (mode === "words") {
-    $("solution-status").textContent = solution.length ? `The longest possible words have ${solution.length} letters.` : "No dictionary word can be made from this draw.";
+    $("solution-status").textContent = solution.length ? translated(`The longest possible words have ${solution.length} letters.`, `بلندترین واژه‌ها ${solution.length} حرف دارند.`) : translated("No dictionary word can be made from this draw.", "با این حروف واژه‌ای در واژه‌نامه پیدا نشد.");
     $("solutions").textContent = solution.words.join(" · ");
   } else {
     $("solution-status").textContent = `${solution.is_complete ? "Best solution" : "Best found (search time limited)"}: ${solution.best_value}, ${solution.best_distance} from the target.`;
@@ -193,10 +223,10 @@ async function finish(answer) {
 async function newRound() {
   resetTimer();
   $("answer").value = "";
-  const next = await request("new", { mode, letter_count: Number($("letter-count").value), big_count: Number($("big-count").value) });
+  const next = await request("new", { mode, language: $("word-language").value, letter_count: Number($("letter-count").value), big_count: Number($("big-count").value) });
   state = { phase: "idle", tiles: [] };
   render(next);
-  $("round-tag").textContent = `ROUND ${String(++round).padStart(2, "0")} · ${mode.toUpperCase()}`;
+  $("round-tag").textContent = `ROUND ${String(++round).padStart(2, "0")} · ${farsiRound() ? "فارسی" : mode.toUpperCase()}`;
 }
 
 $("new-round").addEventListener("click", () => run(newRound));
@@ -208,10 +238,11 @@ for (const nextMode of ["words", "numbers"]) {
     await newRound();
   }));
 }
-for (const [id, kind] of [["vowel", "v"], ["consonant", "c"]]) {
+for (const [id, kind] of [["vowel", "v"], ["consonant", "c"], ["draw-letter", "letter"]]) {
   $(id).addEventListener("click", () => run(async () => render(await request("draw", { kind }))));
 }
 $("fill").addEventListener("click", () => run(async () => render(await request("fill"))));
+$("word-language").addEventListener("change", () => run(newRound));
 $("answer-form").addEventListener("submit", (event) => {
   event.preventDefault();
   run(() => finish($("answer").value));

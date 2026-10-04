@@ -33,7 +33,7 @@
           <p id="instruction" class="muted">Choose your settings, then start a round.</p>
           <div id="target-panel" class="target-panel" hidden><span>YOUR TARGET</span><strong id="target">—</strong></div>
           <div id="tiles" class="tiles" role="group" aria-label="Drawn tiles"></div>
-          <div class="draw-controls" id="draw-controls" hidden><button id="vowel">+ Vowel</button><button id="consonant">+ Consonant</button><button id="fill" class="text-button">Fill the rest ↗</button></div>
+          <div class="draw-controls" id="draw-controls" hidden><button id="vowel">+ Vowel</button><button id="consonant">+ Consonant</button><button id="draw-letter" hidden>+ حرف</button><button id="fill" class="text-button">Fill the rest ↗</button></div>
           <div id="timer-track" class="timer-track" aria-hidden="true"><div id="timer-progress"></div></div>
           <form id="answer-form" hidden>
             <label for="answer" id="answer-label">Your word or words</label>
@@ -50,7 +50,8 @@
         </section>
         <aside>
           <section class="settings"><p class="eyebrow">MAKE IT YOUR ROUND</p><h2>Round settings</h2>
-            <label for="duration">Thinking time</label><select id="duration"><option value="30">30 seconds · Classic</option><option value="60">60 seconds · Take your time</option><option value="0">No timer · Just exploring</option></select>
+            <div id="language-setting"><label for="word-language">Word language / زبان واژه‌ها</label><select id="word-language"><option value="en">English</option><option value="fa" lang="fa">فارسی — Farsi</option></select></div>
+            <div id="duration-setting"><label for="duration">Thinking time</label><select id="duration"><option value="30">30 seconds · Classic</option><option value="60">60 seconds · Take your time</option><option value="0">No timer · Just exploring</option></select></div>
             <div id="letter-setting"><label for="letter-count">Number of letters</label><select id="letter-count"><option>6</option><option>7</option><option>8</option><option selected>9</option><option>10</option><option>11</option><option>12</option></select></div>
             <div id="number-setting" hidden><label for="big-count">Big numbers</label><select id="big-count"><option value="0">0 · All small</option><option value="1">1 big number</option><option value="2" selected>2 big numbers</option><option value="3">3 big numbers</option><option value="4">4 big numbers</option></select></div>
             <button id="new-round" class="primary start">Start round <span aria-hidden="true">→</span></button>
@@ -61,6 +62,6 @@
       </div>
     </div>
   </main>
-  <footer><span>A little practice for a curious mind.</span><span>Open source · <a href="./LICENSE">GPL-3.0</a></span></footer>
+  <footer><span>A little practice for a curious mind.</span><span>Open source · <a href="./LICENSE">GPL-3.0</a> · <a href="./dictionary/NOTICE.txt">Farsi dictionary credits</a></span></footer>
 </body>
 </html>

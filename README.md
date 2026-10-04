@@ -44,6 +44,8 @@ make serve-pages
 Open <http://localhost:8000>. Both words and numbers run the same Python engine
 locally in your browser through Pyodide, with a responsive web interface,
 configurable thinking time, answer validation, scoring, and solver results.
+Choose **فارسی — Farsi** in the Words language selector for Persian vocabulary
+and a right-to-left game panel. Switching languages starts a fresh round.
 The terminal interface remains available. No Python application server is
 required; the first browser load downloads Pyodide from its CDN.
 

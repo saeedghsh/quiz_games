@@ -6,7 +6,8 @@ ship the existing Python engine to the browser and call it through Pyodide.
 There is no application server and no JavaScript copy of the game rules.
 
 `scripts/build_pages.py` copies `web/` into `_site/`, packages the canonical
-`countdown`, `scowl`, and `utilities` modules with the US SCOWL dictionary, and
+`countdown`, `scowl`, and `utilities` modules with the US SCOWL and Farsi Lilak
+dictionaries (including the Lilak license and attribution), and
 exports the Pyodide/Python pins from `pyproject.toml`. The terminal installation
 retains all three bundled dictionaries. Dictionary paths are relative to their
 module, so both installed commands and the Pyodide filesystem work from any

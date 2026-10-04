@@ -44,3 +44,18 @@ answer finishes the round. Replay accepts `بله`/`خیر` or `y`/`n`. English 
 the default (`--language en`); the numbers game is unaffected. Use a UTF-8
 terminal with Persian shaping and bidirectional text support for readable
 Persian output; text is stored and emitted in its natural Unicode order.
+
+## Browser
+
+In Words mode, choose **فارسی — Farsi** under **Word language / زبان واژه‌ها**.
+Changing the language starts a fresh round. Use **+ حرف** to draw one tile or
+**انتخاب بقیهٔ حروف** to fill the board. The game panel and rules use Persian
+text with right-to-left layout; the site navigation and settings remain English.
+Enter multiple answers separated by spaces or a Persian comma (`،`). The longest
+valid answer scores. نیم‌فاصله inside a word stays within the same answer.
+
+The browser runs the same Python dictionary, normalization, scoring, and solver
+as the terminal. The static Pages artifact bundles the dictionary and its
+license, and requires no additional runtime downloads for Farsi. The selected
+word language is retained when switching to numbers and back, while number
+rounds keep their existing English interface.

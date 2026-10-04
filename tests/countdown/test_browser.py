@@ -107,3 +107,38 @@ def test_reveal_and_extra_draw_are_guarded(game):
     game.fill()
     with pytest.raises(ValueError):
         game.draw("v")
+
+
+def test_farsi_round_scores_and_language_switch_reset(game, monkeypatch):
+    english = game.corpus
+    state = json.loads(game.dispatch('{"action":"new","args":{"language":"fa","letter_count":6}}'))
+    assert state["language"] == "fa"
+    assert state["draw_kinds"] == ["letter"]
+    with pytest.raises(ValueError):
+        game.draw("v")
+    letters = iter("کتابها")
+    monkeypatch.setattr(game.words, "draw_letter", lambda kind: next(letters))
+    game.fill()
+    result = game.submit("كِتاب‌ها، كتاب، cat")["result"]
+    assert result["score"] == 6
+    assert result["answers"] == [
+        {"word": "کتاب‌ها", "valid": True}, {"word": "کتاب", "valid": True},
+        {"word": "cat", "valid": False},
+    ]
+    solutions = game.solve()
+    assert solutions["length"] <= 6
+    assert all(game.words.is_response_valid(word) for word in solutions["words"])
+    assert game.new_round(language="en")["tiles"] == []
+    assert game.corpus is english
+    assert game.solutions is None
+    assert game.state["result"] is None
+    assert game.new_round(mode="numbers", language="fa")["language"] == "en"
+
+
+def test_unknown_language_does_not_change_round(game):
+    game.new_round()
+    game.draw("v")
+    before = list(game.state["tiles"])
+    with pytest.raises(ValueError, match="Farsi"):
+        game.new_round(language="xx")
+    assert game.state["tiles"] == before

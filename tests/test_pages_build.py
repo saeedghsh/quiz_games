@@ -19,7 +19,11 @@ def test_build_bundles_canonical_engine_and_dictionary(tmp_path):
     config = json.loads((output / "runtime-config.json").read_text())
     assert config["pyodide-version"] == "0.28.3"
     with zipfile.ZipFile(output / "python/quiz_games.zip") as archive:
-        for name in ("countdown/browser.py", "countdown/number_countdown.py", "scowl/en_US-large.txt"):
+        for name in (
+            "countdown/browser.py", "countdown/number_countdown.py", "scowl/en_US-large.txt",
+            "countdown/data/fa_words.txt", "countdown/data/LICENSE-lilak.txt",
+            "countdown/data/NOTICE.txt",
+        ):
             assert archive.read(name) == (ROOT / name).read_bytes()
         archive.extractall(tmp_path / "extracted")
     # Import only from the artifact, with a different current directory.
@@ -28,9 +32,12 @@ def test_build_bundles_canonical_engine_and_dictionary(tmp_path):
         f"import sys; sys.path.insert(0, {str(tmp_path / 'extracted')!r}); "
         "from countdown.browser import BrowserGame; g = BrowserGame(); "
         "assert len(g.new_round(mode='numbers')['tiles']) == 6; "
-        "assert g.corpus.is_valid_word('cat')",
+        "assert g.corpus.is_valid_word('cat'); "
+        "g.new_round(language='fa'); assert g.corpus.is_valid_word('کتاب')",
     ], cwd=tmp_path, capture_output=True, text=True, check=False)
     assert result.returncode == 0, result.stderr
+    assert (output / "dictionary/NOTICE.txt").exists()
+    assert (output / "dictionary/LICENSE-lilak.txt").exists()
     (output / "stale.txt").touch()
     build_pages(output)
     assert not (output / "stale.txt").exists()

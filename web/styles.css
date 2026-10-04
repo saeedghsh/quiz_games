@@ -93,3 +93,16 @@ footer { max-width: 1160px; margin: 0 auto; padding: 22px 0; border-top: 1px sol
 @media (max-width: 900px) { .layout { grid-template-columns: minmax(0, 1fr) 250px; gap: 16px; } .board { padding: 22px; } .settings { padding: 20px; } .answer-row { flex-direction: column; } .tiles { gap: 4px; } }
 @media (max-width: 700px) { .site-header { padding: 20px; } main { margin: 0 16px; padding-top: 32px; } .intro { margin-bottom: 28px; } .intro > p:last-child { font-size: 13px; } .layout { grid-template-columns: 1fr; } aside { display: contents; } .settings { grid-row: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 18px; } .settings > .eyebrow, .settings h2, .settings-note { display: none; } .settings > label { grid-column: 1; margin: 0; } .settings > select { grid-column: 1; grid-row: 2; } .settings > div { grid-column: 2; grid-row: 1 / 3; } .settings label { margin-top: 0; } .start { grid-column: 1 / -1; margin: 0; } .round-tag { display: none; } .board { padding: 22px 18px; min-height: 380px; } h2 { font-size: 21px; } .clock { flex-basis: 64px; height: 64px; } .tile { font-size: 23px; } .rules { padding: 15px; } footer { margin: 0 20px; gap: 20px; } .answer-row { flex-direction: row; } .answer-row .primary { font-size: 11px; padding: 10px; } .mode-picker { width: 100%; } .mode { flex: 1; } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* Persian letters remain in logical Unicode order; the browser handles shaping. */
+[lang="fa"], [lang="fa"] :is(h2, h3, input, button, .tile, .eyebrow) {
+  font-family: Tahoma, "DejaVu Sans", sans-serif;
+  letter-spacing: normal;
+}
+.board[lang="fa"] h2 { line-height: 1.6; }
+.answer-chip, .tile { unicode-bidi: isolate; }
+@media (max-width: 700px) {
+  .settings > div { grid-column: auto; grid-row: auto; }
+  .settings #language-setting { grid-column: 1 / -1; }
+  .board[lang="fa"] .answer-row { flex-direction: column; }
+}

@@ -24,10 +24,15 @@ def build_pages(output: Path = ROOT / "_site") -> None:
             for source in sorted((ROOT / package).glob("*.py")):
                 archive.write(source, source.relative_to(ROOT))
         archive.write(ROOT / "scowl/en_US-large.txt", "scowl/en_US-large.txt")
+        for source in sorted((ROOT / "countdown/data").glob("*.txt")):
+            archive.write(source, source.relative_to(ROOT))
         archive.write(ROOT / "LICENSE", "LICENSE")
     browser = tomllib.loads((ROOT / "pyproject.toml").read_text())["tool"]["quiz-games"]["browser"]
     (output / "runtime-config.json").write_text(json.dumps(browser, indent=2) + "\n")
     shutil.copy2(ROOT / "LICENSE", output / "LICENSE")
+    (output / "dictionary").mkdir()
+    for name in ("NOTICE.txt", "LICENSE-lilak.txt"):
+        shutil.copy2(ROOT / "countdown/data" / name, output / "dictionary" / name)
     (output / ".nojekyll").touch()
 
 

@@ -62,6 +62,46 @@ def test_real_pyodide_both_games_and_mobile(tmp_path):
             page.locator("#fill").click()
             page.screenshot(path=str(tmp_path / "words-mobile.png"), full_page=True)
             assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
+
+            page.locator("#word-language").select_option("fa")
+            expect(page.locator(".board")).to_have_attribute("dir", "rtl")
+            expect(page.locator(".board")).to_have_attribute("lang", "fa")
+            expect(page.locator("#vowel")).to_be_hidden()
+            expect(page.locator(".tile:not(.blank)")).to_have_count(0)
+            page.locator("#draw-letter").click()
+            expect(page.locator(".tile:not(.blank)")).to_have_count(1)
+            page.locator("#fill").click()
+            expect(page.locator("#answer")).to_have_attribute("dir", "rtl")
+            # Compare this random round with native Python; even a draw with no
+            # solutions has a deterministic expected score and solver result.
+            from countdown.farsi import farsi_corpus
+            from countdown.letter_countdown import LetterCountdown
+
+            game = LetterCountdown(farsi_corpus())
+            game.letters = page.locator(".tile").all_text_contents()
+            best = game.optimal_solutions()
+            answer = best[0] if best else "نامعتبرنامعتبر"
+            keyboard_answer = answer.replace("ک", "ك").replace("ی", "ي")
+            page.locator("#answer").fill(keyboard_answer)
+            page.locator("#submit").click()
+            expect(page.locator("#score")).to_have_text(f"{game.score_response(answer)} امتیاز")
+            expect(page.locator("#solution-status")).not_to_have_text("در حال یافتن بهترین واژه‌ها…", timeout=20000)
+            expect(page.locator("#solutions")).to_have_text(" · ".join(best))
+            expect(page.locator("#word-language")).to_be_enabled()
+            page.screenshot(path=str(tmp_path / "farsi-mobile.png"), full_page=True)
+            assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
+            page.set_viewport_size({"width": 1360, "height": 1000})
+            page.screenshot(path=str(tmp_path / "farsi-desktop.png"), full_page=True)
+            page.locator("#numbers-mode").click()
+            expect(page.locator(".board")).to_have_attribute("dir", "ltr")
+            expect(page.locator("#language-setting")).to_be_hidden()
+            page.locator("#words-mode").click()
+            expect(page.locator(".board")).to_have_attribute("dir", "rtl")
+            page.locator("#word-language").select_option("en")
+            expect(page.locator(".board")).to_have_attribute("dir", "ltr")
+            expect(page.locator("#vowel")).to_be_visible()
+            expect(page.locator("#results")).to_be_hidden()
+            expect(page.locator("#answer")).to_have_value("")
             assert not errors
             browser.close()
     finally:
